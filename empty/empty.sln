@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A18F9F2E-61B2-4891-B83D-3B5815AF99D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "auth-empty", "src\auth-empty\auth-empty.csproj", "{2D809ED7-D67A-4D02-BBCA-CA75AC415882}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D809ED7-D67A-4D02-BBCA-CA75AC415882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D809ED7-D67A-4D02-BBCA-CA75AC415882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D809ED7-D67A-4D02-BBCA-CA75AC415882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D809ED7-D67A-4D02-BBCA-CA75AC415882}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2D809ED7-D67A-4D02-BBCA-CA75AC415882} = {A18F9F2E-61B2-4891-B83D-3B5815AF99D4}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{812B7AB1-392F-410E-A295-B67336BD5A26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "auth-inmem", "src\auth-inmem\auth-inmem.csproj", "{9E547539-0D98-4B8D-B607-2488FBA6E415}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E547539-0D98-4B8D-B607-2488FBA6E415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E547539-0D98-4B8D-B607-2488FBA6E415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E547539-0D98-4B8D-B607-2488FBA6E415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E547539-0D98-4B8D-B607-2488FBA6E415}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9E547539-0D98-4B8D-B607-2488FBA6E415} = {812B7AB1-392F-410E-A295-B67336BD5A26}
+	EndGlobalSection
+EndGlobal
