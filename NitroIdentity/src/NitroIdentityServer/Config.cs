@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
 
 namespace NitroIdentityServer;
 
@@ -29,7 +30,7 @@ public static class Config
                 //ClientName = "Client Credentials Client",
 
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = 
+                ClientSecrets =
                 {
                     new Secret("secret".Sha256())
                 },
@@ -42,7 +43,7 @@ public static class Config
             // interactive client using code flow + pkce
             new Client
             {
-                ClientId = "interactive",
+                ClientId = "web.client",
                 ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
 
                 AllowedGrantTypes = GrantTypes.Code,
@@ -52,7 +53,14 @@ public static class Config
                 PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
 
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "scope2" }
+                //AllowedScopes = { "openid", "profile", "scope2" }
+                //AllowedScopes = { "openid", "profile", "scope2" }
+                AllowedScopes = new List<string>
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    "api1" ,"scope1" , "scope2"
+                }
             },
         };
 }
