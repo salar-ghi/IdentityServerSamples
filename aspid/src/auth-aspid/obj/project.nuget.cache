@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "E6Jvqs5TearUYfUhbgRR+3KIJVUH4cZkj1T8ZWjU+FqI+xE9RyVXgVDCs5noPZ4/L2Wb6hpUcnu1Ou7cRDmQQg==",
+  "dgSpecHash": "dY5UN6YhTQjnb+G7CA5p2QKtthhuKjOdt/WbwrAmdoXhTg4McogGXyu9a+gdSawcyc75Bn09Qcnl/KmvQO0Q0g==",
   "success": true,
   "projectFilePath": "C:\\Users\\s.ghahremani\\source\\repos\\Authentication\\Auth\\aspid\\src\\auth-aspid\\auth-aspid.csproj",
   "expectedPackageFiles": [
@@ -88,12 +88,5 @@
     "C:\\Users\\s.ghahremani\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512",
     "C:\\Users\\s.ghahremani\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1803",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "You are running the 'restore' operation with an 'HTTP' source, 'http://nexus.nitro.local/repository/nuget-hosted/'. Non-HTTPS access will be removed in a future version. Consider migrating to an 'HTTPS' source."
-    }
-  ]
+  "logs": []
 }
