@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using IdentityModel;
 
 namespace NitroIdentityServer;
 
@@ -10,6 +11,15 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResource()
+            {
+                Name = "verification",
+                UserClaims = new List<string>
+                {
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.EmailVerified
+                }
+            }
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -21,7 +31,7 @@ public static class Config
         };
 
     public static IEnumerable<Client> Clients =>
-        new Client[]
+        new List<Client>
         {
             // m2m client credentials flow client
             new Client
@@ -48,9 +58,10 @@ public static class Config
 
                 AllowedGrantTypes = GrantTypes.Code,
 
-                RedirectUris = { "https://localhost:44300/signin-oidc" },
-                FrontChannelLogoutUri = "https://localhost:44300/signout-oidc",
-                PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
+                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                //FrontChannelLogoutUri = "https://localhost:5002/signout-oidc",
+                FrontChannelLogoutUri = "https://localhost:5002/signout",
+                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
 
                 AllowOfflineAccess = true,
                 //AllowedScopes = { "openid", "profile", "scope2" }
@@ -59,7 +70,7 @@ public static class Config
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "api1" ,"scope1" , "scope2"
+                    "api1" ,"scope1" , "scope2", "verification"
                 }
             },
         };

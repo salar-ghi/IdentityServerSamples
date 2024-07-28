@@ -7,6 +7,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IdentityCred>();
+//builder.Services.AddServices();
 
 var app = builder.Build();
 
@@ -22,10 +23,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+//app.UseAuthentication();
+//app.UseAuthorization();
 
-app.UseAuthorization();
-
-app.MapRazorPages();
+app.MapRazorPages(); //.RequireAuthorization();
 
 
 //app.UseEndpoints(endpoints =>
