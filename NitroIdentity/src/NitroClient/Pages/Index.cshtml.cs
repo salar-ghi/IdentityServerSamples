@@ -15,10 +15,15 @@ public class IndexModel : PageModel
         _identity = identity;
     }
 
-    public async Task<IActionResult> OnGet()
-    {
-        var token  = await _identity.CallApiOne();
+    //public async Task<IActionResult> OnGet()
+    //{
+    //    var token  = await _identity.CallApiOne();
 
-        return new JsonResult(token);
+    //    return new JsonResult(token);
+    //}
+
+    public void OnGet()
+    {
+
     }
 }

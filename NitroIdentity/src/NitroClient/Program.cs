@@ -6,8 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddHttpClient();
-builder.Services.AddSingleton<IdentityCred>();
-//builder.Services.AddServices();
+builder.Services.AddServices();
+//builder.Services.AddSingleton<IdentityCred>();
+
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -23,10 +25,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapRazorPages(); //.RequireAuthorization();
+app.MapRazorPages().RequireAuthorization();
 
 
 //app.UseEndpoints(endpoints =>

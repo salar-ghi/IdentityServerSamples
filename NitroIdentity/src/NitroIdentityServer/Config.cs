@@ -58,19 +58,24 @@ public static class Config
 
                 AllowedGrantTypes = GrantTypes.Code,
 
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                // where to redirect to after login
+                //RedirectUris = { "https://localhost:5002/signin-oidc" },
+                RedirectUris = { "https://localhost:5002/CallApi" },
                 //FrontChannelLogoutUri = "https://localhost:5002/signout-oidc",
-                FrontChannelLogoutUri = "https://localhost:5002/signout",
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                 // where to redirect to after logout
+                FrontChannelLogoutUri = "https://localhost:5002/Signout",
+                //PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5002/Signout" },
+                
 
                 AllowOfflineAccess = true,
                 //AllowedScopes = { "openid", "profile", "scope2" }
                 //AllowedScopes = { "openid", "profile", "scope2" }
                 AllowedScopes = new List<string>
                 {
+                    "api1" ,"scope1" , "scope2", "verification",
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "api1" ,"scope1" , "scope2", "verification"
                 }
             },
         };
