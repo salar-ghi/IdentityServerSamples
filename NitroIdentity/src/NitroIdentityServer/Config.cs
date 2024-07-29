@@ -54,18 +54,18 @@ public static class Config
             new Client
             {
                 ClientId = "web.client",
-                ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
-
+                //ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
+                ClientSecrets = { new Secret("secret".Sha256()) },
                 AllowedGrantTypes = GrantTypes.Code,
 
                 // where to redirect to after login
-                //RedirectUris = { "https://localhost:5002/signin-oidc" },
-                RedirectUris = { "https://localhost:5002/CallApi" },
-                //FrontChannelLogoutUri = "https://localhost:5002/signout-oidc",
+                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                //RedirectUris = { "https://localhost:5002/CallApi" },
+                FrontChannelLogoutUri = "https://localhost:5002/signout-oidc",
                  // where to redirect to after logout
-                FrontChannelLogoutUri = "https://localhost:5002/Signout",
-                //PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
-                PostLogoutRedirectUris = { "https://localhost:5002/Signout" },
+                //FrontChannelLogoutUri = "https://localhost:5002/Signout",
+                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                //PostLogoutRedirectUris = { "https://localhost:5002/Signout" },
                 
 
                 AllowOfflineAccess = true,

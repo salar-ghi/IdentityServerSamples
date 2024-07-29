@@ -155,3 +155,5 @@ C:\Users\s.ghahremani\source\repos\Authentication\Auth\aspid\src\auth-aspid\obj\
 C:\Users\s.ghahremani\source\repos\Authentication\Auth\aspid\src\auth-aspid\obj\Debug\net8.0\auth-aspid.pdb
 C:\Users\s.ghahremani\source\repos\Authentication\Auth\aspid\src\auth-aspid\obj\Debug\net8.0\auth-aspid.genruntimeconfig.cache
 C:\Users\s.ghahremani\source\repos\Authentication\Auth\aspid\src\auth-aspid\obj\Debug\net8.0\ref\auth-aspid.dll
+C:\Users\s.ghahremani\source\repos\Authentication\Auth\aspid\src\auth-aspid\obj\Debug\net8.0\auth-aspid.sourcelink.json
+C:\Users\s.ghahremani\source\repos\Authentication\Auth\aspid\src\auth-aspid\bin\Debug\net8.0\keys\is-signing-key-2697A96D23FD3A288E7BF3A2559E311E.json

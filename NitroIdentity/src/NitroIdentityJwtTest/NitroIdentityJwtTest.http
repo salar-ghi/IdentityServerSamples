@@ -1,0 +1,6 @@
+@NitroIdentityJwtTest_HostAddress = http://localhost:5023
+
+GET {{NitroIdentityJwtTest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

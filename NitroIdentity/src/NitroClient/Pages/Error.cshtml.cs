@@ -21,7 +21,15 @@ public class ErrorModel : PageModel
 
     public void OnGet()
     {
-        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+        try
+        {
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            Console.WriteLine($"get terrible error : {RequestId}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"get terrible error : {ex}");
+        }        
     }
 }
 

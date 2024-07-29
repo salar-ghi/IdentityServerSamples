@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("auth-aspid")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ce48b772c8e6bcdadca89b8027330736976a671")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5f4f78870cb527b4e05adb5ede0259fbe5ae787c")]
 [assembly: System.Reflection.AssemblyProductAttribute("auth-aspid")]
 [assembly: System.Reflection.AssemblyTitleAttribute("auth-aspid")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

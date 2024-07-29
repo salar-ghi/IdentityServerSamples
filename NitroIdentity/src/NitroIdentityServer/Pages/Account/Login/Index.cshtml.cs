@@ -127,7 +127,8 @@ public class Index : PageModel
                 }
                 else if (string.IsNullOrEmpty(Input.ReturnUrl))
                 {
-                    return Redirect("~/");
+                    //return Redirect("~/localhost:5002/privacy");
+                    return Redirect("/");
                 }
                 else
                 {

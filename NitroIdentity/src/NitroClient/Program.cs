@@ -1,4 +1,5 @@
 using NitroClient.Infra;
+using Duende.AccessTokenManagement.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,11 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddHttpClient();
 builder.Services.AddServices();
+builder.Services.AddOpenIdConnectAccessTokenManagement();
+builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: client =>
+{
+    client.BaseAddress = new Uri("https://localhost:6001");
+});
 //builder.Services.AddSingleton<IdentityCred>();
 
 builder.Services.AddCors();
@@ -23,6 +29,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; connect-src 'self' http://localhost:50530");
+    await next();
+});
 
 app.UseRouting();
 app.UseAuthentication();

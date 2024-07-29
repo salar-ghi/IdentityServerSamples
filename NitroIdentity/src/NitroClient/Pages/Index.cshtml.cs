@@ -1,18 +1,14 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using NitroClient.Infra;
 
 namespace NitroClient.Pages;
 
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
-    private readonly IdentityCred _identity;
-    public IndexModel(ILogger<IndexModel> logger, IdentityCred identity)
+    public IndexModel(ILogger<IndexModel> logger)
     {
         _logger = logger;
-        _identity = identity;
+        //_identity = identity;
     }
 
     //public async Task<IActionResult> OnGet()

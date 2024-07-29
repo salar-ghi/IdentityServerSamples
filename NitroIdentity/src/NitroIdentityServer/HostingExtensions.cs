@@ -24,6 +24,7 @@ internal static class HostingExtensions
         builder.Services
             .AddIdentityServer(options =>
             {
+                options.UserInteraction.LoginUrl = "";
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
@@ -42,6 +43,12 @@ internal static class HostingExtensions
 
         var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
         var googleClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+
+        //authenticationBuilder.AddCookie("Cookie", options =>
+        //{
+        //    options.LoginPath = "/"
+        //});
+
         if (googleClientId != null && googleClientSecret != null)
         {
             authenticationBuilder.AddGoogle("Google", options =>
