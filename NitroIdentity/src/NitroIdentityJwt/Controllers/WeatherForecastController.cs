@@ -3,10 +3,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace NitroIdentityJwt.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class WeatherForecastController : ControllerBase
 {
+    private readonly IHttpClientFactory _httpClientFactory;
+    public WeatherForecastController(IAuthorizationService authorizationService,
+        ILogger<WeatherForecastController> logger,
+        IHttpClientFactory httpClientFactory)
+    {
+        _authorizationService = authorizationService;
+        _logger = logger;
+        _httpClientFactory = httpClientFactory;
+    }
+
+    private readonly HttpClient _client;
+
     private readonly IAuthorizationService _authorizationService;
 
     private static readonly string[] Summaries = new[]
@@ -15,13 +28,6 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
-
-    public WeatherForecastController(IAuthorizationService authorizationService,
-        ILogger<WeatherForecastController> logger)
-    {
-        _authorizationService = authorizationService;
-        _logger = logger;
-    }
 
     [HttpGet("some-action")]
     public async Task<IActionResult> SomeAction()
@@ -79,4 +85,9 @@ public class WeatherForecastController : ControllerBase
     }
 
 
+
+    public async Task<IActionResult> CallApitwo()
+    {
+
+    }
 }

@@ -20,6 +20,9 @@ public static class AuthService
 
         })
             .AddCookie("Cookies")
+            .AddJwtBearer(options =>
+            {
+            })
             .AddOpenIdConnect("oidc", options =>
             {
                 options.Authority = "https://localhost:5001";
