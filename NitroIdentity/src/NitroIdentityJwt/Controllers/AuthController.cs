@@ -100,7 +100,10 @@ public class AuthController : ControllerBase
             await _userManager.UpdateAsync(user);
 
             HttpContext.Session.SetString("Token", token);
+            HttpContext.Request.Headers["Authorization"] = "Bearer " + token;
             Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true });
+
+            
 
             return Ok(new { Token = token, RefreshToken = refreshToken });
         }
@@ -174,7 +177,7 @@ public class AuthController : ControllerBase
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+            new Claim(JwtRegisteredClaimNames.Sub, user.NationalId),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Id)
         };
@@ -191,12 +194,13 @@ public class AuthController : ControllerBase
 
         var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["Secret"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["ExpireMinutes"]));
+        //var expires = DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["ExpireMinutes"]));
+        var expires = DateTime.UtcNow.AddMinutes(60);
 
         var token = new JwtSecurityToken(
             issuer: jwtSettings["Issuer"],
             audience: jwtSettings["Audience"],
-            claims,
+            claims: claims,
             expires: expires,
             signingCredentials: creds
         );

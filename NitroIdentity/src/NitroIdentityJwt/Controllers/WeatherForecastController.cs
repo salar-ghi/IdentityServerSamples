@@ -1,5 +1,10 @@
+using Duende.IdentityServer.Models;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace NitroIdentityJwt.Controllers;
 
@@ -16,6 +21,7 @@ public class WeatherForecastController : ControllerBase
         _authorizationService = authorizationService;
         _logger = logger;
         _httpClientFactory = httpClientFactory;
+        _client = new HttpClient();
     }
 
     private readonly HttpClient _client;
@@ -85,9 +91,33 @@ public class WeatherForecastController : ControllerBase
     }
 
 
-
+    [HttpGet("ApiTwo")]
+    //[Authorize(Roles = "User")]
     public async Task<IActionResult> CallApitwo()
     {
+        var Token = HttpContext.Session.GetString("Token");
+        if (string.IsNullOrEmpty(Token))
+        {
+            return Unauthorized("No token found in session.");
+        }
+
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        HttpContext.Request.Headers["Authorization"] = "Bearer " + Token;
+        _client.SetBearerToken(Token);
+
+        var response = await _client.GetAsync("https://localhost:5005/api/Users");
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine(response.StatusCode);
+            return Unauthorized(response.Content);
+        }
+        else
+        {
+            var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+            Console.WriteLine(JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true }));
+            var accessTokenResponse = JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true });
+            return Ok(accessTokenResponse);
+        }
 
     }
 }
