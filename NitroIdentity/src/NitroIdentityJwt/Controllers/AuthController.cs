@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Duende.IdentityServer.ResponseHandling;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using NitroIdentityJwt.Dtos;
 using NitroIdentityJwt.Models;
 using NitroIdentityJwt.Service;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -78,8 +80,55 @@ public class AuthController : ControllerBase
     //}
 
 
+    [HttpGet("Index")]
+    public async Task<IActionResult> Index()
+    {
+        string returnUrl = Request.Query["returnUrl"];
+        var dto = new LoginDto { NationalId = "6640009455", Password = "Pass123$" };
+        var token = await GetToken(dto);
+        Console.WriteLine($"Bearer Token is => {token}");
+
+        HttpContext.Session.SetString("Token", token);
+        return Redirect($"https://localhost:5005/api/Users/Index?token={token}");
+
+        //return Ok(new { token });
+
+        //return RedirectToAction(nameof(Login), new { NationalId = "6640009455", Password = "Pass123$" });
+        //return Ok();
+    }
+
+
+    private async Task<string> GetToken(LoginDto model)
+    {
+        var tokenResponse = string.Empty;
+        //???????????????? cahnage To NationalId
+        var user = await _userManager.FindByNameAsync(model.NationalId);
+        if (user != null)
+        {
+            //    var result = await _signInManager.PasswordSignInAsync(model.NationalId, model.Password, false, false);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+            if (result.Succeeded)
+            {
+                var token = await GenerateJwtToken(user);
+                var refreshToken = GenerateRefreshToken();
+
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+                await _userManager.UpdateAsync(user);
+
+                HttpContext.Session.SetString("Token", token);
+                HttpContext.Request.Headers["Authorization"] = "Bearer " + token;
+                Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true });
+
+                tokenResponse = token;
+            }
+        }
+        return tokenResponse;
+        
+    }
+
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginDto model)
+    public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         //???????????????? cahnage To NationalId
         var user = await _userManager.FindByNameAsync(model.NationalId);
@@ -101,9 +150,7 @@ public class AuthController : ControllerBase
 
             HttpContext.Session.SetString("Token", token);
             HttpContext.Request.Headers["Authorization"] = "Bearer " + token;
-            Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true });
-
-            
+            Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true });            
 
             return Ok(new { Token = token, RefreshToken = refreshToken });
         }
@@ -172,6 +219,7 @@ public class AuthController : ControllerBase
 
     private async Task<string> GenerateJwtToken(ApplicationUser user)
     {
+        var tokenHandler = new JwtSecurityTokenHandler();
         var jwtSettings = _configuration.GetSection("JwtSettings");
         //var key = Encoding.ASCII.GetBytes(jwtSettings["Secret"]);
 
@@ -179,7 +227,7 @@ public class AuthController : ControllerBase
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.NationalId),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
+            //new Claim(ClaimTypes.NameIdentifier, user.Id)
         };
 
         // Add roles to claims
@@ -191,11 +239,13 @@ public class AuthController : ControllerBase
 
         // Add permissions to claims if necessary
         // This depends on how you've implemented permissions in your system
-
-        var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["Secret"]));
+        var secret = jwtSettings["Secret"];
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        
         //var expires = DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["ExpireMinutes"]));
-        var expires = DateTime.UtcNow.AddMinutes(60);
+        var expires = DateTime.Now.AddMinutes(60);
 
         var token = new JwtSecurityToken(
             issuer: jwtSettings["Issuer"],
@@ -217,6 +267,30 @@ public class AuthController : ControllerBase
             return Convert.ToBase64String(randomNumber);
         }
     }
+
+
+    //private string GenerateToken(ApplicationUser user)
+    //{
+    //    var jwtSettings = _configuration.GetSection("JwtSettings");
+    //    var secret = jwtSettings["Secret"];
+    //    var tokenHandler = new JwtSecurityTokenHandler();
+    //    var key = Encoding.ASCII.GetBytes(secret);
+
+    //    var claims = new List<Claim>
+    //    {
+    //        new Claim(JwtRegisteredClaimNames.Sub, user.NationalId),
+    //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+    //        //new Claim(ClaimTypes.NameIdentifier, user.Id)
+    //    };
+    //    var tokenDescriptor = new SecurityTokenDescriptor
+    //    {
+    //        Subject = new ClaimsIdentity(new[] { new Claim("username", username) }),
+    //        Expires = DateTime.UtcNow.AddHours(1),
+    //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+    //    };
+    //    var token = tokenHandler.CreateToken(tokenDescriptor);
+    //    return tokenHandler.WriteToken(token);
+    //}
 
 
     [HttpPost("update-user-role")]

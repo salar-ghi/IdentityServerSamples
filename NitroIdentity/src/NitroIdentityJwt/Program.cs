@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using NitroIdentityJwt.Data;
 using NitroIdentityJwt.Models;
 using NitroIdentityJwt.Service;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using static IdentityModel.ClaimComparer;
@@ -54,9 +55,12 @@ builder.Services.AddAuthentication(options => //)
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
+    options.RequireHttpsMetadata = true;
+    options.SaveToken = true;
     options.Audience = "https://localhost:5000/";
     options.Authority = "https://localhost:5000/api/Auth/";
     options.TokenValidationParameters = new TokenValidationParameters
@@ -67,41 +71,44 @@ builder.Services.AddAuthentication(options => //)
         ValidateLifetime = true,
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        
-        
+        //IssuerSigningKey = new SymmetricSecurityKey(key),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]))
+
+
+
     };
-    options.Events = new JwtBearerEvents
-    {
-        OnTokenValidated = context =>
-        {
-            var token = context.Request.Headers["Authorization"].ToString();
-            var tknn = context.SecurityToken as SecurityToken;
-            //var jwtToken = context.SecurityToken as JwtSecurityToken;
-            if (context.SecurityToken is JwtSecurityToken jwtToken)
-            {
-                // Token is a valid JwtSecurityToken
-                // You can access the token's properties and claims here
-                Console.WriteLine($"Token is valid. Claims: {jwtToken.Claims}");
-            }
-            else
-            {
-                // Token is not a JwtSecurityToken or is null
-                // Handle the case where the token is invalid
-                context.Fail("Token is invalid.");
-            }
-            if (token == null)
-            {
-                // Handle the case where the token is null
-                context.Fail("Token is invalid.");
-            }
-            if (TokenBlacklist.IsBlacklisted(context.SecurityToken.ToString()))
-            {
-                context.Fail("Token has been blacklisted");
-            }
-            return Task.CompletedTask;
-        }
-    };
+    //options.Events = new JwtBearerEvents
+    //{
+    //    OnTokenValidated = context =>
+    //    {
+    //        var token = context.Request.Headers["Authorization"].ToString();
+    //        var tknn = context.SecurityToken as SecurityToken;
+    //        //var jwtToken = context.SecurityToken as JwtSecurityToken;
+    //        if (context.SecurityToken is JwtSecurityToken jwtToken)
+    //        {
+    //            // Token is a valid JwtSecurityToken
+    //            // You can access the token's properties and claims here
+    //            Console.WriteLine($"Token is valid. Claims: {jwtToken.RawData}");
+    //        }
+    //        else
+    //        {
+    //            // Token is not a JwtSecurityToken or is null
+    //            // Handle the case where the token is invalid
+    //            context.Fail("Token is invalid.");
+    //        }
+    //        if (token == null)
+    //        {
+    //            // Handle the case where the token is null
+    //            context.Fail("Token is invalid.");
+    //        }
+    //        var tokkkn = context.SecurityToken.ToString();
+    //        if (TokenBlacklist.IsBlacklisted(context.SecurityToken.ToString()))
+    //        {
+    //            context.Fail("Token has been blacklisted");
+    //        }
+    //        return Task.CompletedTask;
+    //    }
+    //};
 });
 //.AddMicrosoftIdentityWebApi(builder.Configuration.GetSection(""));
 
@@ -122,19 +129,36 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddControllers();
+//    options =>
+//{
+//    options.InputFormatters.Add(new CustomFormatter());
+//});
+
+// Enable CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        //builder => builder.WithOrigins("https://localhost:5000") // Change to your front-end URL
+        //builder => builder.WithOrigins("https://localhost:5005") 
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+    //options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Authentication with JwT and sso", Version = "v1" });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        In = ParameterLocation.Header,
-        Description = "Please enter token",
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
     });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
         { 
             new OpenApiSecurityScheme 
@@ -143,9 +167,12 @@ builder.Services.AddSwaggerGen(options =>
                 { 
                     Type = ReferenceType.SecurityScheme, 
                     Id = "Bearer"
-                } 
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header,
             }, 
-            new string[] {} 
+            new List<string>()
         }
     });
 
@@ -153,6 +180,8 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Use CORS
+app.UseCors("AllowAll");
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
