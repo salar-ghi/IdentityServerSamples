@@ -181,7 +181,7 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // Use CORS
-app.UseCors("AllowAll");
+//app.UseCors("AllowAll");
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -203,6 +203,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("AllowAll"); // Use the CORS policy
 
 //app.UseIdentityServer();
 app.UseAuthentication();
