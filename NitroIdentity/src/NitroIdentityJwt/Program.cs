@@ -14,7 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using static IdentityModel.ClaimComparer;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args); 
 
 // Add services to the container.
 
